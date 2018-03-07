@@ -10,7 +10,7 @@ class PalindromeTest {
 	void testIsPalindrome() {
 		
 		String test1true = "Able was I ere I saw Elba";
-		String test2true = "A man, a plan, a canal – Panama";
+		String test2true = "A man, a plan, a canal ï¿½ Panama";
 		String test3false = "This is fake";
 		String test4false = "This is false";
 		
