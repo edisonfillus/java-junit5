@@ -26,4 +26,8 @@ public class LeilaoTest {
 		assertEquals(2000, leilao.getLances().get(0).getValor(), 0.00001);
 		assertEquals(3000, leilao.getLances().get(1).getValor(), 0.00001);
 	}
+	
+
+	
+	 
 }

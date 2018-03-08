@@ -4,7 +4,7 @@ public class Palindrome {
 
 	public boolean isPalindrome(String phrase) {
 
-		String filteredPhrase = phrase.toUpperCase().replace(" ", "").replace("-", "").replace("–", "").replace(",", "");
+		String filteredPhrase = phrase.toUpperCase().replace(" ", "").replace("-", "").replace(",", "");
 
 		for (int i = 0; i < filteredPhrase.length(); i++) {
 

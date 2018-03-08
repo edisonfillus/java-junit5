@@ -1,5 +1,10 @@
 package org.project.example;
 
+/**
+ * Test Data Builder para Leilao
+ * @author Edison Klafke Fillus
+ *
+ */
 public class LeilaoBuilder {
 	private Leilao leilao;
 

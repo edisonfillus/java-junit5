@@ -110,6 +110,7 @@ public class AvaliadorTest {
 		assertEquals(200.0, maiores.get(2).getValor(), 0.00001);
 	}
 
+	
 	@Test
 	public void deveDevolverTodosLancesCasoNaoHajaNoMinimo3() {
 		Leilao leilao = new Leilao("Playstation 3 Novo");
@@ -125,16 +126,17 @@ public class AvaliadorTest {
 		assertEquals(200.0, maiores.get(0).getValor(), 0.00001);
 		assertEquals(100.0, maiores.get(1).getValor(), 0.00001);
 	}
-
-	@Test
-	public void deveDevolverListaVaziaCasoNaoHajaLances() {
-		Leilao leilao = new Leilao("Playstation 3 Novo");
-
-		leiloeiro.avalia(leilao);
-
-		List<Lance> maiores = leiloeiro.getTresMaiores();
-
-		assertEquals(0, maiores.size());
+	
+	@Test(expected=RuntimeException.class)
+	public void naoDeveAvaliarLeiloesSemNenhumLanceDado() {
+	    Leilao leilao = new LeilaoBuilder()
+	        .para("Playstation 3 Novo")
+	        .constroi();
+	    leiloeiro.avalia(leilao);
+	    
 	}
+
+	
+
 
 }
