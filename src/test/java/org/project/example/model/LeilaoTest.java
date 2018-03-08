@@ -1,8 +1,11 @@
-package org.project.example;
+package org.project.example.model;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.project.example.model.Lance;
+import org.project.example.model.Leilao;
+import org.project.example.model.Usuario;
 
 public class LeilaoTest {
 	@Test

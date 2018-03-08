@@ -1,4 +1,4 @@
-package org.project.example;
+package org.project.example.model;
 
 public class Palindrome {
 

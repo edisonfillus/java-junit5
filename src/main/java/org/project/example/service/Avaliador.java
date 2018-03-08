@@ -1,8 +1,11 @@
-package org.project.example;
+package org.project.example.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.project.example.model.Lance;
+import org.project.example.model.Leilao;
 
 public class Avaliador {
 

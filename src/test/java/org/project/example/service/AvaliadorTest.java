@@ -1,4 +1,4 @@
-package org.project.example;
+package org.project.example.service;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,6 +7,11 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.project.example.buider.LeilaoBuilder;
+import org.project.example.model.Lance;
+import org.project.example.model.Leilao;
+import org.project.example.model.Usuario;
+import org.project.example.service.Avaliador;
 
 public class AvaliadorTest {
 

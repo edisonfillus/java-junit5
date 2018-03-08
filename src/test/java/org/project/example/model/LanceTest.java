@@ -1,6 +1,8 @@
-package org.project.example;
+package org.project.example.model;
 
 import org.junit.Test;
+import org.project.example.model.Lance;
+import org.project.example.model.Usuario;
 
 public class LanceTest {
 	
