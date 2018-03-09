@@ -1,15 +1,15 @@
 package org.project.example.model;
 
-public class Usuario {
+public class Bidder {
 
 	private int id;
 	private String nome;
 
-	public Usuario(String nome) {
+	public Bidder(String nome) {
 		this(0, nome);
 	}
 
-	public Usuario(int id, String nome) {
+	public Bidder(int id, String nome) {
 		this.id = id;
 		this.nome = nome;
 	}
@@ -39,7 +39,7 @@ public class Usuario {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Usuario other = (Usuario) obj;
+		Bidder other = (Bidder) obj;
 		if (id != other.id)
 			return false;
 		if (nome == null) {

@@ -5,44 +5,44 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class Leilao {
+public class Auction {
 
 	private String descricao;
 	private Calendar data;
-	private List<Lance> lances;
+	private List<Bid> lances;
 	private boolean encerrado;
 	private int id;
 
-	public Leilao(String descricao) {
+	public Auction(String descricao) {
 		this(descricao, Calendar.getInstance());
 	}
 
-	public Leilao(String descricao, Calendar data) {
+	public Auction(String descricao, Calendar data) {
 		this.descricao = descricao;
 		this.data = data;
-		this.lances = new ArrayList<Lance>();
+		this.lances = new ArrayList<Bid>();
 	}
 
-	public void propoe(Lance lance) {
-		if (lances.isEmpty() || podeDarLance(lance.getUsuario())) {
+	public void propoe(Bid lance) {
+		if (lances.isEmpty() || podeDarLance(lance.getBidder())) {
 			lances.add(lance);
 		}
 	}
 
-	private boolean podeDarLance(Usuario usuario) {
-		return !ultimoLanceDado().getUsuario().equals(usuario) && qtdDeLancesDo(usuario) < 5;
+	private boolean podeDarLance(Bidder usuario) {
+		return !ultimoLanceDado().getBidder().equals(usuario) && qtdDeLancesDo(usuario) < 5;
 	}
 
-	private int qtdDeLancesDo(Usuario usuario) {
+	private int qtdDeLancesDo(Bidder usuario) {
 		int total = 0;
-		for (Lance l : lances) {
-			if (l.getUsuario().equals(usuario))
+		for (Bid l : lances) {
+			if (l.getBidder().equals(usuario))
 				total++;
 		}
 		return total;
 	}
 
-	private Lance ultimoLanceDado() {
+	private Bid ultimoLanceDado() {
 		return lances.get(lances.size() - 1);
 	}
 
@@ -50,7 +50,7 @@ public class Leilao {
 		return descricao;
 	}
 
-	public List<Lance> getLances() {
+	public List<Bid> getLances() {
 		return Collections.unmodifiableList(lances);
 	}
 
@@ -62,7 +62,7 @@ public class Leilao {
 		this.encerrado = true;
 	}
 
-	public boolean isEncerrado() {
+	public boolean isFinished() {
 		return encerrado;
 	}
 

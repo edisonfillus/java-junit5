@@ -1,4 +1,4 @@
-package org.project.example.dao;
+package org.project.example.persistence.impl;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -11,14 +11,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.project.example.model.Lance;
-import org.project.example.model.Leilao;
-import org.project.example.model.Usuario;
+import org.project.example.model.Bid;
+import org.project.example.model.Auction;
+import org.project.example.model.Bidder;
+import org.project.example.persistence.interfaces.AuctionDAO;
 
-public class LeilaoDAO {
+public class MySQLAuctionDAO implements AuctionDAO {
 	private Connection conexao;
 
-	public LeilaoDAO() {
+	public MySQLAuctionDAO() {
 		try {
 			this.conexao = DriverManager.getConnection(
 					"jdbc:mysql://localhost/mocks", "root", "");
@@ -33,13 +34,17 @@ public class LeilaoDAO {
 		return c;
 	}
 
-	public void salva(Leilao leilao) {
+	/* (non-Javadoc)
+	 * @see org.project.example.persistence.impl.AuctionDAO#save(org.project.example.model.Auction)
+	 */
+	@Override
+	public void create(Auction leilao) {
 		try {
 			String sql = "INSERT INTO LEILAO (DESCRICAO, DATA, ENCERRADO) VALUES (?,?,?);";
 			PreparedStatement ps = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, leilao.getDescricao());
 			ps.setDate(2, new java.sql.Date(leilao.getData().getTimeInMillis()));
-			ps.setBoolean(3, leilao.isEncerrado());
+			ps.setBoolean(3, leilao.isFinished());
 
 			ps.execute();
 
@@ -48,12 +53,12 @@ public class LeilaoDAO {
 				leilao.setId(generatedKeys.getInt(1));
 			}
 
-			for (Lance lance : leilao.getLances()) {
+			for (Bid lance : leilao.getLances()) {
 				sql = "INSERT INTO LANCES (LEILAO_ID, USUARIO_ID, VALOR) VALUES (?,?,?);";
 				PreparedStatement ps2 = conexao.prepareStatement(sql);
 				ps2.setInt(1, leilao.getId());
-				ps2.setInt(2, lance.getUsuario().getId());
-				ps2.setDouble(3, lance.getValor());
+				ps2.setInt(2, lance.getBidder().getId());
+				ps2.setDouble(3, lance.getValue());
 
 				ps2.execute();
 				ps2.close();
@@ -68,24 +73,32 @@ public class LeilaoDAO {
 
 	}
 
-	public List<Leilao> encerrados() {
+	/* (non-Javadoc)
+	 * @see org.project.example.persistence.impl.AuctionDAO#encerrados()
+	 */
+	@Override
+	public List<Auction> encerrados() {
 		return porEncerrado(true);
 	}
 
-	public List<Leilao> correntes() {
+	/* (non-Javadoc)
+	 * @see org.project.example.persistence.impl.AuctionDAO#openAuctions()
+	 */
+	@Override
+	public List<Auction> openAuctions() {
 		return porEncerrado(false);
 	}
 
-	private List<Leilao> porEncerrado(boolean status) {
+	private List<Auction> porEncerrado(boolean status) {
 		try {
 			String sql = "SELECT * FROM LEILAO WHERE ENCERRADO = " + status + ";";
 
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 
-			List<Leilao> leiloes = new ArrayList<Leilao>();
+			List<Auction> leiloes = new ArrayList<Auction>();
 			while (rs.next()) {
-				Leilao leilao = new Leilao(rs.getString("descricao"), data(rs.getDate("data")));
+				Auction leilao = new Auction(rs.getString("descricao"), data(rs.getDate("data")));
 				leilao.setId(rs.getInt("id"));
 				if (rs.getBoolean("encerrado"))
 					leilao.encerra();
@@ -96,8 +109,8 @@ public class LeilaoDAO {
 				ResultSet rs2 = ps2.executeQuery();
 
 				while (rs2.next()) {
-					Usuario usuario = new Usuario(rs2.getInt("id"), rs2.getString("nome"));
-					Lance lance = new Lance(usuario, rs2.getDouble("valor"));
+					Bidder usuario = new Bidder(rs2.getInt("id"), rs2.getString("nome"));
+					Bid lance = new Bid(usuario, rs2.getDouble("valor"));
 
 					leilao.propoe(lance);
 				}
@@ -116,14 +129,18 @@ public class LeilaoDAO {
 		}
 	}
 
-	public void atualiza(Leilao leilao) {
+	/* (non-Javadoc)
+	 * @see org.project.example.persistence.impl.AuctionDAO#atualiza(org.project.example.model.Auction)
+	 */
+	@Override
+	public void update(Auction leilao) {
 
 		try {
 			String sql = "UPDATE LEILAO SET DESCRICAO=?, DATA=?, ENCERRADO=? WHERE ID = ?;";
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			ps.setString(1, leilao.getDescricao());
 			ps.setDate(2, new java.sql.Date(leilao.getData().getTimeInMillis()));
-			ps.setBoolean(3, leilao.isEncerrado());
+			ps.setBoolean(3, leilao.isFinished());
 			ps.setInt(4, leilao.getId());
 
 			ps.execute();
@@ -132,7 +149,4 @@ public class LeilaoDAO {
 		}
 	}
 
-	public int x() {
-		return 10;
-	}
 }

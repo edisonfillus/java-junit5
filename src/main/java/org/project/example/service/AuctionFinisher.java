@@ -3,31 +3,31 @@ package org.project.example.service;
 import java.util.Calendar;
 import java.util.List;
 
-import org.project.example.dao.LeilaoDAO;
-import org.project.example.model.Leilao;
+import org.project.example.model.Auction;
+import org.project.example.persistence.interfaces.AuctionDAO;
 
-public class EncerradorDeLeilao {
+public class AuctionFinisher {
 
-	private int encerrados;
-	private final LeilaoDAO dao;
+	private int finished;
+	private final AuctionDAO dao;
 
-	public EncerradorDeLeilao(LeilaoDAO dao) {
+	public AuctionFinisher(AuctionDAO dao) {
 		this.dao = dao;
 	}
 
-	public void encerra() {
-		List<Leilao> todosLeiloesCorrentes = dao.correntes();
+	public void finishOpenAuctions() {
+		List<Auction> todosLeiloesCorrentes = dao.openAuctions();
 
-		for (Leilao leilao : todosLeiloesCorrentes) {
+		for (Auction leilao : todosLeiloesCorrentes) {
 			if (comecouSemanaPassada(leilao)) {
-				encerrados++;
+				finished++;
 				leilao.encerra();
-				dao.salva(leilao);
+				dao.update(leilao);
 			}
 		}
 	}
 
-	private boolean comecouSemanaPassada(Leilao leilao) {
+	private boolean comecouSemanaPassada(Auction leilao) {
 		return diasEntre(leilao.getData(), Calendar.getInstance()) >= 7;
 	}
 
@@ -41,8 +41,9 @@ public class EncerradorDeLeilao {
 		return diasNoIntervalo;
 	}
 
-	public Object getTotalEncerrados() {
-		return encerrados;
+	public Object getTotalFinished() {
+		return finished;
 	}
 
 }
+ 	
