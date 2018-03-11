@@ -22,6 +22,10 @@ public class Auction {
 	private List<Bid> bids;
 	private boolean finished;
 
+	public Auction() {
+		super();
+	}
+	
 	public Auction(String description) {
 		this(description, Calendar.getInstance());
 	}
@@ -36,12 +40,13 @@ public class Auction {
 		this.description = description;
 		this.finished = b;
 		this.bids = new ArrayList<>();
-		bids.add(new Bid(mauricio, d));
+		this.addBid(new Bid(mauricio, d));
 	}
 
-	public void bid(Bid bid) {
+	public void addBid(Bid bid) {
 		if (bids.isEmpty() || canBid(bid.getBidder())) {
 			bids.add(bid);
+			bid.setAuction(this);
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.project.example.model.Auction;
+import org.project.example.model.Bidder;
 import org.project.example.persistence.interfaces.AuctionDAO;
 
 public class HSQLDBAuctionDAO implements AuctionDAO {
@@ -50,6 +51,11 @@ public class HSQLDBAuctionDAO implements AuctionDAO {
 	public List<Auction> porPeriodo(Calendar start, Calendar finish) {
 		return em.createQuery("SELECT a FROM Auction a WHERE a.date BETWEEN :start and :finish and a.finished = false",
 				Auction.class).setParameter("start", start).setParameter("finish", finish).getResultList();
+	}
+	
+	public List<Auction> findAuctionsByBidder(Bidder bidder) {
+		return em.createQuery("SELECT DISTINCT(bid.auction) FROM Bid bid WHERE bid.bidder = :bidder",Auction.class)
+				.setParameter("bidder", bidder).getResultList();
 	}
 
 }

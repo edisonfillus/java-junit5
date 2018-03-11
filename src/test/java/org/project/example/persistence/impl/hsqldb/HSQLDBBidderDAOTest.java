@@ -21,7 +21,7 @@ public class HSQLDBBidderDAOTest {
 
 	@Before
 	public void beforeTests() {
-		sessionFactory = Persistence.createEntityManagerFactory("hsqldb");
+		sessionFactory = Persistence.createEntityManagerFactory("hsqldb-test");
         em = sessionFactory.createEntityManager();
         usuarioDao = new HSQLDBBidderDAO(em);
         em.getTransaction().begin();        

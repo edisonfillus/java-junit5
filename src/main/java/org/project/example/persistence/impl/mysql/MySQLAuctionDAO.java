@@ -95,10 +95,10 @@ public class MySQLAuctionDAO implements AuctionDAO {
 			ResultSet rs = ps.executeQuery();
 			List<Auction> leiloes = new ArrayList<>();
 			while (rs.next()) {
-				Auction leilao = new Auction(rs.getString("descricao"), data(rs.getDate("data")));
-				leilao.setId(rs.getInt("id"));
+				Auction auction = new Auction(rs.getString("descricao"), data(rs.getDate("data")));
+				auction.setId(rs.getInt("id"));
 				if (rs.getBoolean("encerrado"))
-					leilao.finish();
+					auction.finish();
 
 				String sql2 = "SELECT VALOR, NOME, U.ID AS USUARIO_ID, L.ID AS LANCE_ID FROM LANCES L INNER JOIN USUARIO U ON U.ID = L.USUARIO_ID WHERE LEILAO_ID = "
 						+ rs.getInt("id");
@@ -109,12 +109,12 @@ public class MySQLAuctionDAO implements AuctionDAO {
 					Bidder usuario = new Bidder(rs2.getInt("id"), rs2.getString("nome"));
 					Bid lance = new Bid(usuario, rs2.getDouble("valor"));
 
-					leilao.bid(lance);
+					auction.addBid(lance);
 				}
 				rs2.close();
 				ps2.close();
 
-				leiloes.add(leilao);
+				leiloes.add(auction);
 
 			}
 			rs.close();
@@ -161,6 +161,12 @@ public class MySQLAuctionDAO implements AuctionDAO {
 
 	@Override
 	public Long countTotalOpen() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Auction> findAuctionsByBidder(Bidder bidder) {
 		// TODO Auto-generated method stub
 		return null;
 	}

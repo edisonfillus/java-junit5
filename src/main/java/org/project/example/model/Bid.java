@@ -11,13 +11,16 @@ public class Bid {
 	
 	@Id @GeneratedValue
 	private long id;
-	@ManyToOne
+	@ManyToOne(optional=false) 
 	private Bidder bidder;
-	@ManyToOne
+	@ManyToOne(optional=false)
 	private Auction auction;
 	private double value;
 
-
+	public Bid() {
+		super();
+	}
+	
 	public Bid(Bidder bidder, double value) {
 		if (value <= 0) 
 			throw new IllegalArgumentException();

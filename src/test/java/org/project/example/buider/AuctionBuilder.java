@@ -9,47 +9,47 @@ import org.project.example.model.Auction;
 import org.project.example.model.Bidder;
 
 /**
- * Test Data Builder para Leilao
+ * Test Data Builder for Auction
  * @author Edison Klafke Fillus
  *
  */
 public class AuctionBuilder {
-	private String descricao;
-	private Calendar data;
-	private List<Bid> lances;
-	private boolean encerrado;
+	private String description;
+	private Calendar date;
+	private List<Bid> bids;
+	private boolean finished;
 
 	public AuctionBuilder() {
-		this.data = Calendar.getInstance();
-		lances = new ArrayList<Bid>();
+		this.date = Calendar.getInstance();
+		bids = new ArrayList<Bid>();
 	}
 	
 	public AuctionBuilder to(String descricao) {
-		this.descricao = descricao;
+		this.description = descricao;
 		return this;
 	}
 	
-	public AuctionBuilder atDate(Calendar data) {
-		this.data = data;
+	public AuctionBuilder atDate(Calendar date) {
+		this.date = date;
 		return this;
 	}
 
 	public AuctionBuilder bid(Bidder usuario, double valor) {
-		lances.add(new Bid(usuario, valor));
+		bids.add(new Bid(usuario, valor));
 		return this;
 	}
 
 	public AuctionBuilder encerrado() {
-		this.encerrado = true;
+		this.finished = true;
 		return this;
 	}
 
 	public Auction build() {
-		Auction leilao = new Auction(descricao, data);
-		for(Bid lanceDado : lances) leilao.bid(lanceDado);
-		if(encerrado) leilao.finish();
+		Auction auction = new Auction(description, date);
+		for(Bid bid : bids) auction.addBid(bid);
+		if(finished) auction.finish();
 				
-		return leilao;
+		return auction;
 	}
 	
 }

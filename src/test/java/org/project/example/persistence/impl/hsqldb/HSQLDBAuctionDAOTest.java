@@ -12,6 +12,7 @@ import javax.persistence.Persistence;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.project.example.buider.AuctionBuilder;
 import org.project.example.model.Auction;
 import org.project.example.model.Bidder;
 import org.project.example.persistence.interfaces.AuctionDAO;
@@ -89,6 +90,53 @@ public class HSQLDBAuctionDAOTest {
         assertEquals("XBox", finishedAuctions.get(0).getDescription());
     }
 	
+
+	@Test
+    public void shouldReturnAllAuctionsFromBidder() throws SQLException {
+        // create a bidder
+        Bidder mauricio = new Bidder("Mauricio Aniche", "mauricio@aniche.com.br");
+
+        	
+        // create 2 auctions
+        Auction auction1 = new Auction("Geladeira", 1500.0, mauricio, false);
+        Auction auction2 = new Auction("XBox", 700.0, mauricio, false);
+
+        // persist in database
+        bidderDAO.create(mauricio);
+        auctionDAO.create(auction1);
+        auctionDAO.create(auction2);
+        
+        List<Auction> bidderAuctions = auctionDAO.findAuctionsByBidder(mauricio);
+        
+        assertEquals(2L, bidderAuctions.size());
+        assertEquals(mauricio.getName(), bidderAuctions.get(0).getBids().get(0).getBidder().getName());
+    }
+	
+	@Test
+    public void shouldReturnOnlyDistinctAuctionsFromBidder() throws SQLException {
+        // create a bidder
+        Bidder mauricio = new Bidder("Mauricio Aniche", "mauricio@aniche.com.br");
+        Bidder eduardo = new Bidder("Eduardo Aniche", "eduardo@aniche.com.br");
+        
+        // create 2 auctions
+        Auction auction1 = new Auction("Geladeira", 1500.0, mauricio, false);
+        Auction auction2 = new AuctionBuilder().to("XBox")
+        		.bid(mauricio, 100.0)
+        		.bid(eduardo, 120.0)
+        		.bid(mauricio, 150.0)
+        		.build();
+        
+        // persist in database
+        bidderDAO.create(mauricio);
+        bidderDAO.create(eduardo);
+        auctionDAO.create(auction1);
+        auctionDAO.create(auction2);
+        
+        List<Auction> bidderAuctions = auctionDAO.findAuctionsByBidder(mauricio);
+        
+        assertEquals(2L, bidderAuctions.size());
+        assertEquals(mauricio.getName(), bidderAuctions.get(0).getBids().get(0).getBidder().getName());
+    }
 
 	
 	

@@ -13,7 +13,7 @@ public class AuctionTest {
 		Auction leilao = new Auction("Macbook Pro 15");
 		assertEquals(0, leilao.getBids().size());
 
-		leilao.bid(new Bid(new Bidder("Steve Jobs"), 2000.0));
+		leilao.addBid(new Bid(new Bidder("Steve Jobs"), 2000.0));
 
 		assertEquals(1, leilao.getBids().size());
 		assertEquals(2000.0, leilao.getBids().get(0).getValue(), 0.00001);
@@ -22,8 +22,8 @@ public class AuctionTest {
 	@Test
 	public void deveReceberVariosLances() {
 		Auction leilao = new Auction("Macbook Pro 15");
-		leilao.bid(new Bid(new Bidder("Steve Jobs"), 2000.0));
-		leilao.bid(new Bid(new Bidder("Steve Wozniak"), 3000.0));
+		leilao.addBid(new Bid(new Bidder("Steve Jobs"), 2000.0));
+		leilao.addBid(new Bid(new Bidder("Steve Wozniak"), 3000.0));
 
 		assertEquals(2, leilao.getBids().size());
 		assertEquals(2000.0, leilao.getBids().get(0).getValue(), 0.00001);

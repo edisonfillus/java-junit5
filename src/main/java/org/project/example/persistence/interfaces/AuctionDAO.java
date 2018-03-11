@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.project.example.model.Auction;
+import org.project.example.model.Bidder;
 
 public interface AuctionDAO {
 
@@ -18,6 +19,8 @@ public interface AuctionDAO {
 	Long countTotalFinished();
 
 	Long countTotalOpen();
+
+	List<Auction> findAuctionsByBidder(Bidder bidder);
 
 
 }
