@@ -5,22 +5,38 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Auction {
 
-	private String descricao;
-	private Calendar data;
-	private List<Bid> lances;
-	private boolean encerrado;
+	@Id @GeneratedValue
 	private int id;
+	private String description;
+	private Calendar data;
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy="auction")
+	private List<Bid> lances;
+	private boolean finished;
 
 	public Auction(String descricao) {
 		this(descricao, Calendar.getInstance());
 	}
 
 	public Auction(String descricao, Calendar data) {
-		this.descricao = descricao;
+		this.description = descricao;
 		this.data = data;
+		this.lances = new ArrayList<>();
+	}
+
+	public Auction(String description, double d, Bidder mauricio, boolean b) {
+		this.description = description;
+		this.finished = b;
 		this.lances = new ArrayList<Bid>();
+		lances.add(new Bid(mauricio, d));
 	}
 
 	public void propoe(Bid lance) {
@@ -47,7 +63,7 @@ public class Auction {
 	}
 
 	public String getDescricao() {
-		return descricao;
+		return description;
 	}
 
 	public List<Bid> getLances() {
@@ -59,11 +75,11 @@ public class Auction {
 	}
 
 	public void encerra() {
-		this.encerrado = true;
+		this.finished = true;
 	}
 
 	public boolean isFinished() {
-		return encerrado;
+		return finished;
 	}
 
 	public void setId(int id) {

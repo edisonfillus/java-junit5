@@ -125,7 +125,7 @@ public class AuctionFinisherTest {
 		AuctionDAO fakeDAO = mock(AuctionDAO.class);
         when(fakeDAO.findOpenAuctions()).thenReturn(Arrays.asList(leilao1, leilao2));
 
-        doThrow(new SQLException()).when(fakeDAO).update(leilao1);
+        doThrow(new SQLException("Mock Proposital")).when(fakeDAO).update(leilao1);
 
         EmailSender fakeSender = mock(EmailSender.class);
         AuctionFinisher encerrador = 
@@ -155,14 +155,13 @@ public class AuctionFinisherTest {
 		AuctionDAO fakeDAO = mock(AuctionDAO.class);
         when(fakeDAO.findOpenAuctions()).thenReturn(Arrays.asList(leilao1, leilao2));
 
-        doThrow(new SQLException()).when(fakeDAO).update(any(Auction.class));
+        doThrow(new SQLException("Mock Proposital")).when(fakeDAO).update(any(Auction.class));
         
         EmailSender fakeSender = mock(EmailSender.class);
         AuctionFinisher encerrador = 
             new AuctionFinisher(fakeDAO, fakeSender);
 
-        encerrador.finishOpenAuctions();
-        
+       	encerrador.finishOpenAuctions();
         //It shouldn't send any email
         verify(fakeSender,never()).send(any(Auction.class));
         

@@ -1,8 +1,20 @@
 package org.project.example.model;
 
-public class Bid {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
+@Entity
+public class Bid {
+	
+	
+	@Id @GeneratedValue
+	private long id;
+	@ManyToOne
 	private Bidder bidder;
+	@ManyToOne
+	private Auction auction;
 	private double value;
 
 
@@ -19,6 +31,14 @@ public class Bid {
 
 	public double getValue() {
 		return value;
+	}
+
+	public Auction getAuction() {
+		return auction;
+	}
+
+	public void setAuction(Auction auction) {
+		this.auction = auction;
 	}
 
 }

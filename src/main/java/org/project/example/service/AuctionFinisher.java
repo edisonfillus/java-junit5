@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.project.example.model.Auction;
 import org.project.example.persistence.interfaces.AuctionDAO;
 
@@ -31,7 +30,7 @@ public class AuctionFinisher {
 				try {
 					dao.update(leilao);
 				} catch (SQLException e) {
-					LogManager.getLogger().log(Level.ERROR, e);
+					LogManager.getLogger().error("Failed to finish auction",new SQLException(e));
 					continue;
 				}
 				sender.send(leilao);

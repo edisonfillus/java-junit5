@@ -15,5 +15,7 @@ public interface AuctionDAO {
 
 	List<Auction> findOpenAuctions() throws SQLException ;
 
+	Long countTotalFinished();
+
 
 }

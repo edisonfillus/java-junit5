@@ -153,4 +153,10 @@ public class MySQLAuctionDAO implements AuctionDAO {
 		}
 	}
 
+	@Override
+	public Long countTotalFinished() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
