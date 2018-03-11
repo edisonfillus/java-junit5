@@ -171,4 +171,16 @@ public class MySQLAuctionDAO implements AuctionDAO {
 		return null;
 	}
 
+	@Override
+	public void remove(Auction auction) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Auction findById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

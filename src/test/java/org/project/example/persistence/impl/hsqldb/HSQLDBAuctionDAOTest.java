@@ -1,6 +1,8 @@
 package org.project.example.persistence.impl.hsqldb;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -137,6 +139,42 @@ public class HSQLDBAuctionDAOTest {
         assertEquals(2L, bidderAuctions.size());
         assertEquals(mauricio.getName(), bidderAuctions.get(0).getBids().get(0).getBidder().getName());
     }
+	
+	@Test
+	public void shouldDeleteAuction() throws SQLException {
+		//Create Auction
+        Bidder bidder = new Bidder("Mauricio Aniche", "mauricio@aniche.com.br");
+        Auction auction = new AuctionBuilder().to("XBox")
+        		.bid(bidder, 100.0)
+        		.build();	
+        bidderDAO.create(bidder);
+        auctionDAO.create(auction);
+		
+		//Force Hibernate to send commands to database
+		em.flush(); 
+		em.clear();
+		
+		//Get Auction from database
+		Auction auctionOnDB = auctionDAO.findById(auction.getId());
+		
+		//Assert creation
+		assertNotNull(auctionOnDB);
+		
+		//Remove Bidder from database
+		auctionDAO.remove(auctionOnDB);
+		
+		//Force Hibernate to send commands to database
+		em.flush(); 
+		em.clear();
+				
+		//Try to find removed Bidder
+		Auction auctionRemoved = auctionDAO.findById(auction.getId());
+		
+		//Assert it not exist anymore
+		assertNull(auctionRemoved);
+
+	}
+
 
 	
 	

@@ -22,5 +22,9 @@ public interface AuctionDAO {
 
 	List<Auction> findAuctionsByBidder(Bidder bidder);
 
+	void remove(Auction auction);
+
+	Auction findById(int id);
+
 
 }

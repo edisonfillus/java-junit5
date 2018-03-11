@@ -28,6 +28,11 @@ public class HSQLDBAuctionDAO implements AuctionDAO {
 	public void update(Auction leilao) throws SQLException {
 		em.merge(leilao);
 	}
+	
+	public Auction findById(int id) {
+		return em.find(Auction.class, id);
+	}
+
 
 	@Override
 	public List<Auction> findFinishedAuctions() throws SQLException {
@@ -56,6 +61,10 @@ public class HSQLDBAuctionDAO implements AuctionDAO {
 	public List<Auction> findAuctionsByBidder(Bidder bidder) {
 		return em.createQuery("SELECT DISTINCT(bid.auction) FROM Bid bid WHERE bid.bidder = :bidder",Auction.class)
 				.setParameter("bidder", bidder).getResultList();
+	}
+	
+	public void remove (Auction auction) {
+		em.remove(auction);
 	}
 
 }

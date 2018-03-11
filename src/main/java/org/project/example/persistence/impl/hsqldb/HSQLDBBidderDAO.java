@@ -17,11 +17,6 @@ public class HSQLDBBidderDAO implements BidderDAO {
 		this.em = em;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.project.example.persistence.impl.hsqldb.BidderDAO#findById(int)
-	 */
 	@Override
 	public Bidder findById(int id) {
 		return em.find(Bidder.class, id);
