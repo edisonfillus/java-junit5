@@ -1,11 +1,7 @@
 package org.project.example.persistence.impl.hsqldb;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-
-import org.project.example.model.Auction;
 import org.project.example.model.Bidder;
 import org.project.example.persistence.interfaces.BidderDAO;
 
