@@ -13,4 +13,6 @@ public interface BidderDAO {
 
 	void create(Bidder bidder);
 
+	void remove(Bidder bidder);
+
 }

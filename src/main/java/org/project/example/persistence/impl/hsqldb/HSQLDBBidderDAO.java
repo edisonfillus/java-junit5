@@ -38,8 +38,9 @@ public class HSQLDBBidderDAO implements BidderDAO {
 	public Bidder findByNameEmail(String name, String email) {
 		Bidder found = null;
 		try {
-			found = (Bidder) em
-					.createQuery("SELECT b " + "FROM Bidder b " + "WHERE b.name = :name and b.email = :email")
+			found = em
+					.createQuery("SELECT bidder FROM Bidder bidder WHERE bidder.name = :name and bidder.email = :email",
+							Bidder.class)
 					.setParameter("name", name).setParameter("email", email).getSingleResult();
 		} catch (NoResultException e) {
 			// Do nothing, just return null.
@@ -48,17 +49,15 @@ public class HSQLDBBidderDAO implements BidderDAO {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.project.example.persistence.impl.hsqldb.BidderDAO#create(org.project.
-	 * example.model.Bidder)
-	 */
 	@Override
 	public void create(Bidder bidder) {
 		em.persist(bidder);
 	}
-
 	
+	@Override
+	public void remove(Bidder bidder) {
+		em.remove(bidder);
+	}
+
+
 }
