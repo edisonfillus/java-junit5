@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.project.example.buider.AuctionBuilder;
 import org.project.example.model.Auction;
+import org.project.example.model.Bid;
 import org.project.example.model.Bidder;
 import org.project.example.persistence.interfaces.AuctionDAO;
 import org.project.example.persistence.interfaces.BidderDAO;
@@ -174,6 +175,44 @@ public class HSQLDBAuctionDAOTest {
 		assertNull(auctionRemoved);
 
 	}
+	
+	
+	@Test
+	public void shouldUpdateBidder() throws SQLException {
+		//Create Auction
+        Bidder mauricio = new Bidder("Mauricio Aniche", "mauricio@aniche.com.br");
+        Bidder eduardo = new Bidder("Eduardo Aniche", "eduardo@aniche.com.br");
+        Auction auction = new AuctionBuilder().to("XBox")
+        		.bid(mauricio, 100.0)
+        		.build();	
+        bidderDAO.create(mauricio);
+        bidderDAO.create(eduardo);
+        auctionDAO.create(auction);
+		
+		//Force Hibernate to send commands to database
+		em.flush(); 
+		em.clear();
+
+		//Find new auction
+		Auction toUpdateAuction = auctionDAO.findById(auction.getId());
+		
+		//Change values
+		toUpdateAuction.setDescription("XBox 360");
+		toUpdateAuction.addBid(new Bid(eduardo, 150.0));
+				
+		// Force Hibernate to send commands to database, update should be triggered automatically
+		em.flush();
+		em.clear();
+		
+		//Should find updated Auction
+		Auction updatedAuction = auctionDAO.findById(auction.getId());
+		assertNotNull(updatedAuction);
+
+		//Values should change
+		assertEquals("XBox 360",updatedAuction.getDescription());
+		assertEquals(150.0, updatedAuction.getBids().get(1).getValue(),0.0001);
+	}
+
 
 
 	

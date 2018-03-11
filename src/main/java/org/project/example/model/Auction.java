@@ -31,13 +31,13 @@ public class Auction {
 	}
 
 	public Auction(String description, Calendar date) {
-		this.description = description;
+		this.setDescription(description);
 		this.date = date;
 		this.bids = new ArrayList<>();
 	}
 
 	public Auction(String description, double d, Bidder mauricio, boolean b) {
-		this.description = description;
+		this.setDescription(description);
 		this.finished = b;
 		this.bids = new ArrayList<>();
 		this.addBid(new Bid(mauricio, d));
@@ -93,6 +93,10 @@ public class Auction {
 
 	public int getId() {
 		return id;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

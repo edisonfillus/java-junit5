@@ -53,6 +53,10 @@ public class HSQLDBBidderDAO implements BidderDAO {
 	public void remove(Bidder bidder) {
 		em.remove(bidder);
 	}
+	
+	public void update(Bidder bidder) {
+		em.merge(bidder);
+	}
 
 
 }

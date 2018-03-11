@@ -22,12 +22,12 @@ public class Bidder {
 
 	public Bidder(int id, String name) {
 		this.id = id;
-		this.name = name;
+		this.setName(name);
 	}
 
 	public Bidder(String name, String email) {
-		this.name = name;
-		this.email = email;
+		this.setName(name);
+		this.setEmail(email);
 	}
 	
 
@@ -41,6 +41,14 @@ public class Bidder {
 	
 	public String getEmail() {
 		return email;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
