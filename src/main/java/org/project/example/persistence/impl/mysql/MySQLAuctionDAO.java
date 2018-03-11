@@ -1,4 +1,4 @@
-package org.project.example.persistence.impl;
+package org.project.example.persistence.impl.mysql;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -38,65 +38,62 @@ public class MySQLAuctionDAO implements AuctionDAO {
 	 * @see org.project.example.persistence.impl.AuctionDAO#save(org.project.example.model.Auction)
 	 */
 	@Override
-	public void create(Auction leilao) {
-		try {
-			String sql = "INSERT INTO LEILAO (DESCRICAO, DATA, ENCERRADO) VALUES (?,?,?);";
-			PreparedStatement ps = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	public void create(Auction leilao) throws SQLException {
+		String sql = "INSERT INTO LEILAO (DESCRICAO, DATA, ENCERRADO) VALUES (?,?,?);";
+		PreparedStatement ps = null;
+		ResultSet generatedKeys = null;
+		try{
+			ps = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, leilao.getDescricao());
 			ps.setDate(2, new java.sql.Date(leilao.getData().getTimeInMillis()));
 			ps.setBoolean(3, leilao.isFinished());
-
 			ps.execute();
-
-			ResultSet generatedKeys = ps.getGeneratedKeys();
+			generatedKeys = ps.getGeneratedKeys();
 			if (generatedKeys.next()) {
 				leilao.setId(generatedKeys.getInt(1));
 			}
-
 			for (Bid lance : leilao.getLances()) {
 				sql = "INSERT INTO LANCES (LEILAO_ID, USUARIO_ID, VALOR) VALUES (?,?,?);";
 				PreparedStatement ps2 = conexao.prepareStatement(sql);
 				ps2.setInt(1, leilao.getId());
 				ps2.setInt(2, lance.getBidder().getId());
 				ps2.setDouble(3, lance.getValue());
-
 				ps2.execute();
 				ps2.close();
-
 			}
 
-			ps.close();
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+		} catch(SQLException e) {
+			throw new SQLException(e);
+		} finally {
+			if(generatedKeys!=null && !generatedKeys.isClosed()) {
+				generatedKeys.close();
+			}
+			if (ps!=null && !ps.isClosed()) {
+				ps.close();
+			}
 		}
-
 	}
 
 	/* (non-Javadoc)
 	 * @see org.project.example.persistence.impl.AuctionDAO#encerrados()
 	 */
-	@Override
-	public List<Auction> encerrados() {
+	public List<Auction> findFinishedAuctions() throws SQLException {
 		return porEncerrado(true);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.project.example.persistence.impl.AuctionDAO#openAuctions()
 	 */
-	@Override
-	public List<Auction> openAuctions() {
+	public List<Auction> findOpenAuctions() throws SQLException {
 		return porEncerrado(false);
 	}
 
-	private List<Auction> porEncerrado(boolean status) {
+	private List<Auction> porEncerrado(boolean status) throws SQLException {
 		try {
 			String sql = "SELECT * FROM LEILAO WHERE ENCERRADO = " + status + ";";
-
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
-
-			List<Auction> leiloes = new ArrayList<Auction>();
+			List<Auction> leiloes = new ArrayList<>();
 			while (rs.next()) {
 				Auction leilao = new Auction(rs.getString("descricao"), data(rs.getDate("data")));
 				leilao.setId(rs.getInt("id"));
@@ -125,7 +122,11 @@ public class MySQLAuctionDAO implements AuctionDAO {
 
 			return leiloes;
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new SQLException(e);
+		} finally {
+			if(!conexao.isClosed()) {
+				conexao.close();
+			}
 		}
 	}
 
@@ -133,19 +134,22 @@ public class MySQLAuctionDAO implements AuctionDAO {
 	 * @see org.project.example.persistence.impl.AuctionDAO#atualiza(org.project.example.model.Auction)
 	 */
 	@Override
-	public void update(Auction leilao) {
-
+	public void update(Auction leilao) throws SQLException  {
+		String sql = "UPDATE LEILAO SET DESCRICAO=?, DATA=?, ENCERRADO=? WHERE ID = ?;";
+		PreparedStatement ps = null;
 		try {
-			String sql = "UPDATE LEILAO SET DESCRICAO=?, DATA=?, ENCERRADO=? WHERE ID = ?;";
-			PreparedStatement ps = conexao.prepareStatement(sql);
+			ps = conexao.prepareStatement(sql);
 			ps.setString(1, leilao.getDescricao());
 			ps.setDate(2, new java.sql.Date(leilao.getData().getTimeInMillis()));
 			ps.setBoolean(3, leilao.isFinished());
 			ps.setInt(4, leilao.getId());
-
 			ps.execute();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new SQLException(e);
+		} finally {
+			if (ps!=null && !ps.isClosed()) {
+				ps.close();
+			}
 		}
 	}
 

@@ -1,8 +1,12 @@
 package org.project.example.service;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.project.example.model.Auction;
 import org.project.example.persistence.interfaces.AuctionDAO;
 
@@ -10,19 +14,27 @@ public class AuctionFinisher {
 
 	private int finished;
 	private final AuctionDAO dao;
+	private final EmailSender sender;
 
-	public AuctionFinisher(AuctionDAO dao) {
+	public AuctionFinisher(AuctionDAO dao, EmailSender sender) {
 		this.dao = dao;
+		this.sender = sender;
 	}
 
-	public void finishOpenAuctions() {
-		List<Auction> todosLeiloesCorrentes = dao.openAuctions();
+	public void finishOpenAuctions() throws SQLException{
+		List<Auction> todosLeiloesCorrentes = dao.findOpenAuctions();
 
 		for (Auction leilao : todosLeiloesCorrentes) {
 			if (comecouSemanaPassada(leilao)) {
 				finished++;
 				leilao.encerra();
-				dao.update(leilao);
+				try {
+					dao.update(leilao);
+				} catch (SQLException e) {
+					LogManager.getLogger().log(Level.ERROR, e);
+					continue;
+				}
+				sender.send(leilao);
 			}
 		}
 	}

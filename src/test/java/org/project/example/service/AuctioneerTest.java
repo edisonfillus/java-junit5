@@ -35,9 +35,9 @@ public class AuctioneerTest {
 	public void deveEntenderLancesEmOrdemCrescente() {
 		
         Auction leilao = new AuctionBuilder().to("Playstation 3 Novo")
-                .lance(john, 300.0)
-                .lance(maria, 250.0)
-                .lance(joseph, 400.0)
+                .bid(john, 300.0)
+                .bid(maria, 250.0)
+                .bid(joseph, 400.0)
                 .build();
 
 		// executando a acao
@@ -51,9 +51,9 @@ public class AuctioneerTest {
 	@Test
 	public void deveEntenderLancesEmOrdemCrescenteComOutrosValores() {
 		Auction leilao = new AuctionBuilder().to("Playstation 3 Novo")
-				.lance(maria, 1000.0)
-				.lance(john, 2000.0)
-				.lance(joseph, 3000.0)
+				.bid(maria, 1000.0)
+				.bid(john, 2000.0)
+				.bid(joseph, 3000.0)
 				.build();
 
 		auctioneer.evaluate(leilao);
@@ -65,7 +65,7 @@ public class AuctioneerTest {
 	@Test
 	public void deveEntenderLeilaoComApenasUmLance() {
 		Auction leilao = new AuctionBuilder().to("Playstation 3 Novo")
-				.lance(john, 1000.0)
+				.bid(john, 1000.0)
 				.build();
 		
 		auctioneer.evaluate(leilao);
@@ -78,10 +78,10 @@ public class AuctioneerTest {
 	public void deveEntenderLancesEmOrdemAleatória() {
 
 		Auction leilao = new AuctionBuilder().to("Playstation 3 Novo")
-				.lance(maria, 500.0)
-				.lance(john, 2000.0)
-				.lance(joseph, 700.0)
-				.lance(peter, 100.0)
+				.bid(maria, 500.0)
+				.bid(john, 2000.0)
+				.bid(joseph, 700.0)
+				.bid(peter, 100.0)
 				.build();
 
 		auctioneer.evaluate(leilao);
@@ -100,10 +100,10 @@ public class AuctioneerTest {
 	public void deveEncontrarOsTresMaioresLances() {
 		
 		Auction leilao = new AuctionBuilder().to("Playstation 3 Novo")
-				.lance(john, 100.0)
-				.lance(maria, 200.0)
-				.lance(john, 300.0)
-				.lance(maria, 400.0)
+				.bid(john, 100.0)
+				.bid(maria, 200.0)
+				.bid(john, 300.0)
+				.bid(maria, 400.0)
 				.build();
 		
 		auctioneer.evaluate(leilao);
@@ -120,8 +120,8 @@ public class AuctioneerTest {
 	@Test
 	public void deveDevolverTodosLancesCasoNaoHajaNoMinimo3() {
 		Auction leilao = new AuctionBuilder().to("Playstation 3 Novo")
-				.lance(john, 100.0)
-				.lance(maria, 200.0)
+				.bid(john, 100.0)
+				.bid(maria, 200.0)
 				.build();
 		
 		auctioneer.evaluate(leilao);

@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.project.example.model.Bid;
 import org.project.example.model.Bidder;
 
-public class LanceTest {
+public class BidTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void deveRecusarLancesComValorDeZero() {

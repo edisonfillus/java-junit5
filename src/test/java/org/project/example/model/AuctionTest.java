@@ -7,7 +7,7 @@ import org.project.example.model.Bid;
 import org.project.example.model.Auction;
 import org.project.example.model.Bidder;
 
-public class LeilaoTest {
+public class AuctionTest {
 	@Test
 	public void deveReceberUmLance() {
 		Auction leilao = new Auction("Macbook Pro 15");

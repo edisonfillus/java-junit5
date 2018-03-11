@@ -34,7 +34,7 @@ public class AuctionBuilder {
 		return this;
 	}
 
-	public AuctionBuilder lance(Bidder usuario, double valor) {
+	public AuctionBuilder bid(Bidder usuario, double valor) {
 		lances.add(new Bid(usuario, valor));
 		return this;
 	}

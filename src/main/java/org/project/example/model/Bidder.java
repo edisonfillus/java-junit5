@@ -1,53 +1,46 @@
 package org.project.example.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Bidder {
 
+	@Id @GeneratedValue
 	private int id;
-	private String nome;
-
+	private String name;
+	private String email;
+	
+	public Bidder() {
+		super();
+	}
+	
 	public Bidder(String nome) {
 		this(0, nome);
 	}
 
-	public Bidder(int id, String nome) {
+	public Bidder(int id, String name) {
 		this.id = id;
-		this.nome = nome;
+		this.name = name;
 	}
+
+	public Bidder(String name, String email) {
+		this.name = name;
+		this.email = email;
+	}
+	
 
 	public int getId() {
 		return id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Bidder other = (Bidder) obj;
-		if (id != other.id)
-			return false;
-		if (nome == null) {
-			if (other.nome != null)
-				return false;
-		} else if (!nome.equals(other.nome))
-			return false;
-		return true;
+	
+	public String getEmail() {
+		return email;
 	}
 
 }
