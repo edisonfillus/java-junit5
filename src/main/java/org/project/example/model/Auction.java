@@ -17,64 +17,64 @@ public class Auction {
 	@Id @GeneratedValue
 	private int id;
 	private String description;
-	private Calendar data;
+	private Calendar date;
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy="auction")
-	private List<Bid> lances;
+	private List<Bid> bids;
 	private boolean finished;
 
-	public Auction(String descricao) {
-		this(descricao, Calendar.getInstance());
+	public Auction(String description) {
+		this(description, Calendar.getInstance());
 	}
 
-	public Auction(String descricao, Calendar data) {
-		this.description = descricao;
-		this.data = data;
-		this.lances = new ArrayList<>();
+	public Auction(String description, Calendar date) {
+		this.description = description;
+		this.date = date;
+		this.bids = new ArrayList<>();
 	}
 
 	public Auction(String description, double d, Bidder mauricio, boolean b) {
 		this.description = description;
 		this.finished = b;
-		this.lances = new ArrayList<Bid>();
-		lances.add(new Bid(mauricio, d));
+		this.bids = new ArrayList<>();
+		bids.add(new Bid(mauricio, d));
 	}
 
-	public void propoe(Bid lance) {
-		if (lances.isEmpty() || podeDarLance(lance.getBidder())) {
-			lances.add(lance);
+	public void bid(Bid bid) {
+		if (bids.isEmpty() || canBid(bid.getBidder())) {
+			bids.add(bid);
 		}
 	}
 
-	private boolean podeDarLance(Bidder usuario) {
-		return !ultimoLanceDado().getBidder().equals(usuario) && qtdDeLancesDo(usuario) < 5;
+	private boolean canBid(Bidder bidder) {
+		return !lastBid().getBidder().equals(bidder) && countBidFrom(bidder) < 5;
 	}
 
-	private int qtdDeLancesDo(Bidder usuario) {
+	private int countBidFrom(Bidder bidder) {
 		int total = 0;
-		for (Bid l : lances) {
-			if (l.getBidder().equals(usuario))
+		for (Bid l : bids) {
+			if (l.getBidder().equals(bidder))
 				total++;
 		}
 		return total;
 	}
 
-	private Bid ultimoLanceDado() {
-		return lances.get(lances.size() - 1);
+	private Bid lastBid() {
+		return bids.get(bids.size() - 1);
 	}
 
-	public String getDescricao() {
+	public String getDescription() {
 		return description;
 	}
 
-	public List<Bid> getLances() {
-		return Collections.unmodifiableList(lances);
+	public List<Bid> getBids() {
+		return Collections.unmodifiableList(bids);
 	}
 
-	public Calendar getData() {
-		return (Calendar) data.clone();
+	public Calendar getDate() {
+		return (Calendar) date.clone();
 	}
 
-	public void encerra() {
+	public void finish() {
 		this.finished = true;
 	}
 

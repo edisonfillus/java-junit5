@@ -46,8 +46,8 @@ public class AuctionBuilder {
 
 	public Auction build() {
 		Auction leilao = new Auction(descricao, data);
-		for(Bid lanceDado : lances) leilao.propoe(lanceDado);
-		if(encerrado) leilao.encerra();
+		for(Bid lanceDado : lances) leilao.bid(lanceDado);
+		if(encerrado) leilao.finish();
 				
 		return leilao;
 	}

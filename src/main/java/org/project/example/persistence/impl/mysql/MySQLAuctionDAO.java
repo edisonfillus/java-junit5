@@ -44,15 +44,15 @@ public class MySQLAuctionDAO implements AuctionDAO {
 		ResultSet generatedKeys = null;
 		try{
 			ps = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, leilao.getDescricao());
-			ps.setDate(2, new java.sql.Date(leilao.getData().getTimeInMillis()));
+			ps.setString(1, leilao.getDescription());
+			ps.setDate(2, new java.sql.Date(leilao.getDate().getTimeInMillis()));
 			ps.setBoolean(3, leilao.isFinished());
 			ps.execute();
 			generatedKeys = ps.getGeneratedKeys();
 			if (generatedKeys.next()) {
 				leilao.setId(generatedKeys.getInt(1));
 			}
-			for (Bid lance : leilao.getLances()) {
+			for (Bid lance : leilao.getBids()) {
 				sql = "INSERT INTO LANCES (LEILAO_ID, USUARIO_ID, VALOR) VALUES (?,?,?);";
 				PreparedStatement ps2 = conexao.prepareStatement(sql);
 				ps2.setInt(1, leilao.getId());
@@ -98,7 +98,7 @@ public class MySQLAuctionDAO implements AuctionDAO {
 				Auction leilao = new Auction(rs.getString("descricao"), data(rs.getDate("data")));
 				leilao.setId(rs.getInt("id"));
 				if (rs.getBoolean("encerrado"))
-					leilao.encerra();
+					leilao.finish();
 
 				String sql2 = "SELECT VALOR, NOME, U.ID AS USUARIO_ID, L.ID AS LANCE_ID FROM LANCES L INNER JOIN USUARIO U ON U.ID = L.USUARIO_ID WHERE LEILAO_ID = "
 						+ rs.getInt("id");
@@ -109,7 +109,7 @@ public class MySQLAuctionDAO implements AuctionDAO {
 					Bidder usuario = new Bidder(rs2.getInt("id"), rs2.getString("nome"));
 					Bid lance = new Bid(usuario, rs2.getDouble("valor"));
 
-					leilao.propoe(lance);
+					leilao.bid(lance);
 				}
 				rs2.close();
 				ps2.close();
@@ -139,8 +139,8 @@ public class MySQLAuctionDAO implements AuctionDAO {
 		PreparedStatement ps = null;
 		try {
 			ps = conexao.prepareStatement(sql);
-			ps.setString(1, leilao.getDescricao());
-			ps.setDate(2, new java.sql.Date(leilao.getData().getTimeInMillis()));
+			ps.setString(1, leilao.getDescription());
+			ps.setDate(2, new java.sql.Date(leilao.getDate().getTimeInMillis()));
 			ps.setBoolean(3, leilao.isFinished());
 			ps.setInt(4, leilao.getId());
 			ps.execute();
@@ -155,6 +155,12 @@ public class MySQLAuctionDAO implements AuctionDAO {
 
 	@Override
 	public Long countTotalFinished() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Long countTotalOpen() {
 		// TODO Auto-generated method stub
 		return null;
 	}

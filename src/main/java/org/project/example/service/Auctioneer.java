@@ -15,10 +15,10 @@ public class Auctioneer {
 	private List<Bid> maiores;
 
 	public void evaluate(Auction leilao) {
-		if (leilao.getLances().isEmpty())
+		if (leilao.getBids().isEmpty())
 			throw new IllegalArgumentException("Não é possível avaliar um leilão sem lances");
 
-		for (Bid lance : leilao.getLances()) {
+		for (Bid lance : leilao.getBids()) {
 			if (lance.getValue() > maiorDeTodos)
 				maiorDeTodos = lance.getValue();
 			if (lance.getValue() < menorDeTodos)
@@ -29,7 +29,7 @@ public class Auctioneer {
 	}
 
 	private void pegaOsMaioresNo(Auction leilao) {
-		maiores = new ArrayList<>(leilao.getLances());
+		maiores = new ArrayList<>(leilao.getBids());
 		
 		Collections.sort(maiores, (Bid o1, Bid o2) -> ((Double)o2.getValue()).compareTo(o1.getValue()));
 		maiores = maiores.subList(0, maiores.size() > 3 ? 3 : maiores.size());

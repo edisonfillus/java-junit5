@@ -26,7 +26,7 @@ public class AuctionFinisher {
 		for (Auction leilao : todosLeiloesCorrentes) {
 			if (comecouSemanaPassada(leilao)) {
 				finished++;
-				leilao.encerra();
+				leilao.finish();
 				try {
 					dao.update(leilao);
 				} catch (SQLException e) {
@@ -39,7 +39,7 @@ public class AuctionFinisher {
 	}
 
 	private boolean comecouSemanaPassada(Auction leilao) {
-		return diasEntre(leilao.getData(), Calendar.getInstance()) >= 7;
+		return diasEntre(leilao.getDate(), Calendar.getInstance()) >= 7;
 	}
 
 	private int diasEntre(Calendar inicio, Calendar fim) {

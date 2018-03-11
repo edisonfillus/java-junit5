@@ -17,5 +17,7 @@ public interface AuctionDAO {
 
 	Long countTotalFinished();
 
+	Long countTotalOpen();
+
 
 }

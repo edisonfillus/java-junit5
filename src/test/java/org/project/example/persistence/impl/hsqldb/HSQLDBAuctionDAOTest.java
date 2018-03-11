@@ -3,6 +3,7 @@ package org.project.example.persistence.impl.hsqldb;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -38,7 +39,7 @@ public class HSQLDBAuctionDAOTest {
 		em.close();
 	}
 	
-	@Test
+	@Test 
     public void deveContarLeiloesNaoEncerrados() throws SQLException {
         // criamos um usuario
         Bidder mauricio = new Bidder("Mauricio Aniche", "mauricio@aniche.com.br");
@@ -46,7 +47,32 @@ public class HSQLDBAuctionDAOTest {
         // criamos os dois leiloes
         Auction ativo = new Auction("Geladeira", 1500.0, mauricio, false);
         Auction encerrado = new Auction("XBox", 700.0, mauricio, false);
-        encerrado.encerra();
+        encerrado.finish();
+
+        // persistimos todos no banco
+        bidderDAO.create(mauricio);
+        auctionDAO.create(ativo);
+        auctionDAO.create(encerrado);
+
+        // invocamos a acao que queremos testar
+        // pedimos o total para o DAO
+        long total = auctionDAO.countTotalOpen();
+        List<Auction> openAuctions = auctionDAO.findOpenAuctions();
+        
+        assertEquals(1L, total);
+        assertEquals(1L, openAuctions.size());
+        assertEquals("Geladeira", openAuctions.get(0).getDescription());
+    }
+	
+	@Test
+    public void deveContarLeiloesEncerrados() throws SQLException {
+        // criamos um usuario
+        Bidder mauricio = new Bidder("Mauricio Aniche", "mauricio@aniche.com.br");
+
+        // criamos os dois leiloes
+        Auction ativo = new Auction("Geladeira", 1500.0, mauricio, false);
+        Auction encerrado = new Auction("XBox", 700.0, mauricio, false);
+        encerrado.finish();
 
         // persistimos todos no banco
         bidderDAO.create(mauricio);
@@ -56,9 +82,14 @@ public class HSQLDBAuctionDAOTest {
         // invocamos a acao que queremos testar
         // pedimos o total para o DAO
         long total = auctionDAO.countTotalFinished();
-
+        List<Auction> finishedAuctions = auctionDAO.findFinishedAuctions();
+        
         assertEquals(1L, total);
+        assertEquals(1L, finishedAuctions.size());
+        assertEquals("XBox", finishedAuctions.get(0).getDescription());
     }
+	
+
 	
 	
 }
