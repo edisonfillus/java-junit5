@@ -20,7 +20,7 @@
 		<jacoco.version>0.8.0</jacoco.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<mockito.version>2.15.0</mockito.version>
-		<log4j.version>2.10.0</log4j.version>
+		<log4j.version>2.16.0</log4j.version>
 	</properties>
 
 	<build>
